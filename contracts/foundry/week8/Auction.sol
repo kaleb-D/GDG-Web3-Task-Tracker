@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 contract SimpleAuction {
-    // STEP 1: Auction Struct
+    
     struct Auction {
         address seller;
         address highestBidder;
@@ -11,12 +11,11 @@ contract SimpleAuction {
         bool ended;
     }
 
-    // STEP 2: State Variables
     uint256 public auctionCount;
     mapping(uint256 => Auction) public auctions;
     mapping(address => uint256) public pendingReturns;
 
-    // STEP 3: createAuction
+    //  createAuction
     function createAuction(uint256 _duration) public {
         auctionCount++;
         auctions[auctionCount] = Auction({
@@ -28,7 +27,7 @@ contract SimpleAuction {
         });
     }
 
-    // STEP 4: bid
+    //  bid
     function bid(uint256 _auctionId) public payable {
         Auction storage auction = auctions[_auctionId];
         require(block.timestamp < auction.endTime, "Auction already ended.");
@@ -43,7 +42,7 @@ contract SimpleAuction {
         auction.highestBid = msg.value;
     }
 
-    // STEP 5: withdraw
+    // withdraw
     function withdraw() public returns (bool) {
         uint256 amount = pendingReturns[msg.sender];
         if (amount > 0) {
@@ -56,7 +55,7 @@ contract SimpleAuction {
         return true;
     }
 
-    // STEP 6: endAuction
+    // endAuction
     function endAuction(uint256 _auctionId) public {
         Auction storage auction = auctions[_auctionId];
         require(block.timestamp >= auction.endTime, "Auction not yet ended.");

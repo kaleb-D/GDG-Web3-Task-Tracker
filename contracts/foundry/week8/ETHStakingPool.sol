@@ -2,25 +2,25 @@
 pragma solidity ^0.8.20;
 
 contract StakingPool {
-    // STEP 1: Stake Struct
+    //  Stake Struct
     struct Stake {
         uint256 amount;
         uint256 startTime;
         bool claimed;
     }
 
-    // STEP 2: State Variables
+   
     address public owner;
     uint256 public rewardRate; // reward per second
     mapping(address => Stake) public stakes;
 
-    // STEP 3: Constructor
+    
     constructor(uint256 _rewardRate) {
         owner = msg.sender;
         rewardRate = _rewardRate;
     }
 
-    // STEP 4: stake
+    //  stake
     function stake() public payable {
         require(msg.value > 0, "Cannot stake 0");
         require(stakes[msg.sender].amount == 0, "Already has active stake");
@@ -32,7 +32,7 @@ contract StakingPool {
         });
     }
 
-    // STEP 5: calculateReward
+    //  calculateReward
     function calculateReward(address _user) public view returns (uint256) {
         Stake storage userStake = stakes[_user];
         if (userStake.claimed || userStake.amount == 0) return 0;
@@ -41,7 +41,7 @@ contract StakingPool {
         return duration * rewardRate;
     }
 
-    // STEP 6: unstake
+    // unstake
     function unstake() public {
         Stake storage userStake = stakes[msg.sender];
         require(userStake.amount > 0, "No stake found");
@@ -56,6 +56,6 @@ contract StakingPool {
         payable(msg.sender).transfer(totalPayout);
     }
 
-    // Helper to fund the contract with reward ETH
+   
     receive() external payable {}
 }
